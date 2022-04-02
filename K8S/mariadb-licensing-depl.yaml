@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - image: mariadb:latest
+        name: mariadb
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+                name: mariadb-user-credentials
+                key: MYSQL_ROOT_PASSWORD
+        ports:
+        - containerPort: 3306
+          name: mariadb
+        volumeMounts:
+        - name: mariadb-persistent-storage
+          mountPath: /var/lib/mysql
+        - name: mariadb-init-script-volume
+          mountPath: /etc/mysql/init
+        - name: mariadb-credentials-volume
+          mountPath: /etc/mysql/credentials
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/bash", "-c", "/etc/mysql/init/init-db.sh"]
+      volumes:
+      - name: mariadb-persistent-storage
+        persistentVolumeClaim:
+          claimName: mariadb-claim
+      - name: mariadb-init-script-volume
+        configMap:
+          name: mariadb-init-script
+          defaultMode: 0777
+      - name: mariadb-credentials-volume
+        secret:
+          secretName: mariadb-user-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: mariadb
+  ports:
+  - name: mariadb
+    protocol: TCP
+    port: 3306
+    targetPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: mariadb
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
+

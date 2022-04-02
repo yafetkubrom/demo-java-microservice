@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configserver-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configserver
+  template:
+    metadata:
+      labels:
+        app: configserver
+    spec:
+      containers:
+        - name: configserver
+          image: dockdockduce/config-server:latest
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configserver-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: configserver
+  ports:
+  - name: configserver
+    protocol: TCP
+    port: 8071
+    targetPort: 8071

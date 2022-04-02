@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native, git
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+        git:
+          uri: https://github.com/yafetkubrom/config.git
+          default-label: main
+
+management:
+  security:
+    enabled: false
+
+server:
+  port: 8071
+
+encrypt:
+  key: b69f45a868c69b14f86b190cae2d0f2fa06186b8ee3fe3f5716cc3a931e69882

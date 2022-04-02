@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: vault
+  cloud:
+    config:
+      server:
+        vault:
+          port: 8200
+          host: 127.0.0.1
+          kvVersion: 2
+
+server:
+  port: 8071
+
+# Dont Use.
+# vault is used to store secret pieces of information
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config

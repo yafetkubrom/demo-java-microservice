@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: licensing-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: licensingservice
+  template:
+    metadata:
+      labels:
+        app: licensingservice
+    spec:
+      containers:
+        - name: licensingservice
+          image: dockdockduce/licensing-service:latest
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: licensing-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: licensingservice
+  ports:
+  - name: licensingservice
+    protocol: TCP
+    port: 8080
+    targetPort: 8080

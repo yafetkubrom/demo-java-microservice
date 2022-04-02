@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-init-script
+  labels:
+    app: mariadb
+data:
+  init-db.sh: |-
+    #!/bin/bash
+    sleep 30s
+
+    mariadb -u root -p"$(cat /etc/mysql/credentials/MYSQL_ROOT_PASSWORD)" -e \
+    "CREATE DATABASE spring_microservice_dev;
+    CREATE USER '$(cat /etc/mysql/credentials/user_1)'@'%' IDENTIFIED BY '$(cat /etc/mysql/credentials/password_1)';
+    GRANT all ON spring_microservice_dev.* to '$(cat /etc/mysql/credentials/user_1)'@'%';
+    FLUSH PRIVILEGES;"

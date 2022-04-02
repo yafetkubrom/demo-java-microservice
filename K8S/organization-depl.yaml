@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: organization-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: organizationservice
+  template:
+    metadata:
+      labels:
+        app: organizationservice
+    spec:
+      containers:
+        - name: organizationservice
+          image: dockdockduce/organization-service:latest
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: organization-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: organizationservice
+  ports:
+  - name: organizationservice
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
