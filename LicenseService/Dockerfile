@@ -3,7 +3,7 @@
 FROM openjdk:11-slim as build
 
 #add maintainer INFO
-LABEL maintainer="Yafet Kubrom <yafet.kubrom@gmail.com>"
+LABEL maintainer="Yafet Kubrom : yafet.kubrom@gmail.com"
 
 #Running applications with user privileges helps to mitigate some risks
 #To run the application as a non-root user
@@ -24,10 +24,10 @@ RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
 ## This new image contains the different layers of a Spring Boot app instead of the complete JAR file.
 
 #Same Java runtime
-FROM openjdk:11-slim
+#FROM openjdk:11-slim
 
 #Add volume pointing to /tmp
-VOLUME /tmp
+#VOLUME /tmp
 
 #Running applications with user privileges helps to mitigate some risks
 #To run the application as a non-root user
