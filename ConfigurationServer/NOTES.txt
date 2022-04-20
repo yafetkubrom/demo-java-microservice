@@ -22,6 +22,7 @@ Tasks
     - Write Docker files for all services
     - Change all .properties to .yml
     - experiment with eureka (configure it & research its usage)
+    - implement spring cloud bus
 
 Credentials
     - vault
